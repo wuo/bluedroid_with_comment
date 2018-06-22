@@ -55,6 +55,7 @@ static void init(const packet_fragmenter_callbacks_t* result_callbacks) {
 
 static void cleanup() { partial_packets.clear(); }
 
+//该函数用于发送数据时拆分数据包
 static void fragment_and_dispatch(BT_HDR* packet) {
   CHECK(packet != NULL);
 
@@ -86,8 +87,14 @@ static void fragment_and_dispatch(BT_HDR* packet) {
     UINT16_TO_STREAM(stream, max_data_size);
 
     packet->len = max_packet_size;
+
+    //将数据包发送出去，false表示没有发送完毕，不要释放内存，以为内存块
+    //是一次性释放的。
     callbacks->fragmented(packet, false);
 
+    //地址packet->data + packet->offset + max_packet_size之前的数据都被发送出去了
+    //而这里offset的增加值是max_data_size而非max_packet_size,是为下一个发送的包预留
+    //了一个4Bytes的ACL_PREAMBLE_SIZE。
     packet->offset += max_data_size;
     remaining_length -= max_data_size;
     packet->len = remaining_length;
@@ -117,6 +124,7 @@ static bool check_uint16_overflow(uint16_t a, uint16_t b) {
   return (UINT16_MAX - a) < b;
 }
 
+//该函数用于接收数据时组合数据包
 static void reassemble_and_dispatch(UNUSED_ATTR BT_HDR* packet) {
   if ((packet->event & MSG_EVT_MASK) == MSG_HC_TO_STACK_HCI_ACL) {
     uint8_t* stream = packet->data;
