@@ -211,6 +211,11 @@
 #define BT_EVT_CONTEXT_SWITCH_EVT (0x0001 | BT_EVT_BTIF)
 
 /* Define the header of each buffer used in the Bluetooth stack.
+ * 此数据结构最重要，代表数据包，是一个柔性数组，len表示data中存储的数据大小,
+ * offset表示偏移量，例如有时候一个包中的数据要分包发送，此时就需要offset来指定
+ * 数据的有效位置，layer_specific应该是表示数据包发给的层级，0表示hci。
+ * 注意，真正的数据是data中的内容，data中的内容是遵守BT规范的，头部的其他内容只
+ * 不过是为了分析处理方便而增加的。
  */
 typedef struct {
   uint16_t event;

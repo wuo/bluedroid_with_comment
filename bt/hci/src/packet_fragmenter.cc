@@ -110,6 +110,7 @@ static void fragment_and_dispatch(BT_HDR* packet) {
       packet->layer_specific--;
 
       if (packet->layer_specific == 0) {
+	//从代码看，这里的数据是发向高层的
         packet->event = MSG_HC_TO_STACK_L2C_SEG_XMIT;
         callbacks->transmit_finished(packet, false);
         return;
@@ -117,6 +118,7 @@ static void fragment_and_dispatch(BT_HDR* packet) {
     }
   }
 
+  //该packet所包含的所有数据都已经发送完毕，true表示可以释放这一块内存
   callbacks->fragmented(packet, true);
 }
 
