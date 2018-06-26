@@ -88,7 +88,7 @@ static void fragment_and_dispatch(BT_HDR* packet) {
 
     packet->len = max_packet_size;
 
-    //将数据包发送出去，false表示没有发送完毕，不要释放内存，以为内存块
+    //将数据包发送出去，false表示没有发送完毕，不要释放内存，因为内存块
     //是一次性释放的。
     callbacks->fragmented(packet, false);
 
