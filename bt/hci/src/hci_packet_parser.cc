@@ -48,6 +48,8 @@ static void parse_generic_command_complete(BT_HDR* response) {
 static void parse_read_buffer_size_response(BT_HDR* response,
                                             uint16_t* data_size_ptr,
                                             uint16_t* acl_buffer_count_ptr) {
+  //此处跳过的 5 bytes after包含evt code(1 byte), param total len(1 byte),
+  //opcode(2 bytes), status(1 byte) 
   uint8_t* stream = read_command_complete_header(response, HCI_READ_BUFFER_SIZE,
                                                  5 /* bytes after */);
   CHECK(stream != NULL);
