@@ -15,6 +15,9 @@
  *  limitations under the License.
  *
  ******************************************************************************/
+/*该文件用于解析从controller接收到的hci event, 最主要的是command complete event,
+ * 即用于回复command的event.
+ */
 
 #define LOG_TAG "bt_hci"
 

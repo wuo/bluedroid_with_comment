@@ -15,6 +15,9 @@
  *  limitations under the License.
  *
  ******************************************************************************/
+/* 该文件用于生成各种hci command, 这些基本上都是初始化时发送给controller的命令。
+ * 发送这些command的地方为controller module,代码位置为/device/src/controller.cc
+ */
 
 #include <base/logging.h>
 
@@ -38,6 +41,7 @@ static BT_HDR* make_command(uint16_t opcode, size_t parameter_size,
 
 static BT_HDR* make_reset(void) { return make_command_no_params(HCI_RESET); }
 
+/*这个read buffer size command 能够从controller获取最大ACL data长度*/
 static BT_HDR* make_read_buffer_size(void) {
   return make_command_no_params(HCI_READ_BUFFER_SIZE);
 }
