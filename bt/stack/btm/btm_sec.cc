@@ -4819,6 +4819,9 @@ void btm_sec_link_key_notification(const RawAddress& p_bda, uint8_t* p_link_key,
  * Description      This function is called when controller requests link key
  *
  * Returns          Pointer to the record or NULL
+ * 
+ * 参考 core_Spec_5.0 P1425
+ *
  *
  ******************************************************************************/
 void btm_sec_link_key_request(const RawAddress& bda) {
@@ -4833,6 +4836,7 @@ void btm_sec_link_key_request(const RawAddress& bda) {
         "btm_sec_link_key_request() rejecting link key req "
         "State: %d START_TIMEOUT : %d",
         btm_cb.pairing_state, btm_cb.collision_start_time);
+    //上层没有link key
     btsnd_hcic_link_key_neg_reply(bda);
     return;
   }
