@@ -56,6 +56,7 @@ extern void btm_ble_test_command_complete(uint8_t* p);
 
 /******************************************************************************/
 /*            L O C A L    F U N C T I O N     P R O T O T Y P E S            */
+/*    这些接口都是controller向host发送hci event的处理函数                     */
 /******************************************************************************/
 static void btu_hcif_inquiry_comp_evt(uint8_t* p);
 static void btu_hcif_inquiry_result_evt(uint8_t* p);
@@ -1018,6 +1019,7 @@ static void btu_hcif_command_complete_evt_on_task(BT_HDR* event,
   osi_free(event);
 }
 
+//每次host向controller发送cmd后controller都会返回Command_complete_event
 static void btu_hcif_command_complete_evt(BT_HDR* response, void* context) {
   do_in_hci_thread(FROM_HERE, base::Bind(btu_hcif_command_complete_evt_on_task,
                                          response, context));
