@@ -55,7 +55,7 @@ static void init(const packet_fragmenter_callbacks_t* result_callbacks) {
 
 static void cleanup() { partial_packets.clear(); }
 
-//该函数用于发送数据时拆分数据包
+//该函数用于发送数据时拆分数据包,注意，具体发送数据还是在hci_layer.c中
 static void fragment_and_dispatch(BT_HDR* packet) {
   CHECK(packet != NULL);
 
@@ -110,7 +110,11 @@ static void fragment_and_dispatch(BT_HDR* packet) {
       packet->layer_specific--;
 
       if (packet->layer_specific == 0) {
-	//从代码看，这里的数据是发向高层的
+	//从代码看，这里的数据是发向高层的,从MSG_HC_TO_STACK_L2C_SEG_XMIT的定义来看，
+	//也是从下层到上层的，而且当调用callbacks->transmit_finished(packet, false)
+	//时，hci_layer.c中对应调用的是send_data_upwards，说明也是向上。最终上层的处
+	//理是在btu/btu_task.c中的btu_hci_msg_process中的case BT_EVT_TO_BTU_L2C_SEG_XMIT
+	//中。
         packet->event = MSG_HC_TO_STACK_L2C_SEG_XMIT;
         callbacks->transmit_finished(packet, false);
         return;
