@@ -257,7 +257,8 @@ static reactor_status_t run_reactor(reactor_t* reactor, int iterations) {
       // The event file descriptor is the only one that registers with
       // a NULL data pointer. We use the NULL to identify it and break
       // out of the reactor loop.
-      // 此处 ptr == NULL正是调用register时加入的,这个是用来管理epollfd自身的生命周期的。
+      // 此处返回的事件是针对自身的eventfd的，是调用reactor_new时加入的,
+      // 是用来控制reactor的运行与停止。
       if (events[j].data.ptr == NULL) {
         eventfd_t value;
         eventfd_read(reactor->event_fd, &value);
